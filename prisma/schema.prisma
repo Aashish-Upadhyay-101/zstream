@@ -58,6 +58,7 @@ model User {
     image                  String?
     backgroundImage        String?
     handle                 String?
+    description            String?                  @db.Text
     accounts               Account[]
     announcement           Announcement[]
     announcementEngagement AnnouncementEngagement[]
