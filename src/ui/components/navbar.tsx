@@ -7,6 +7,13 @@ interface NavbarProps {
   children?: JSX.Element;
 }
 
+interface NavigationItem {
+  icon: (className: string) => JSX.Element;
+  name: string;
+  path: string;
+  lineAbove: boolean;
+}
+
 export default function Navbar({ children }: NavbarProps) {
   const [searchInput, setSearchInput] = useState<string>("");
 
@@ -14,7 +21,7 @@ export default function Navbar({ children }: NavbarProps) {
 
   const handleKeyDownSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      console.log("YOu pressed Enter");
+      console.log("You pressed Enter");
       handleSearch();
     }
   };
@@ -40,6 +47,7 @@ export default function Navbar({ children }: NavbarProps) {
             />
           </div>
         </div>
+        <div className="flex items-center lg:hidden">{children}</div>
       </div>
     </nav>
   );

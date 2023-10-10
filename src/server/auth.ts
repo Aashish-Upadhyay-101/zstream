@@ -4,10 +4,12 @@ import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
+  User,
 } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
-
 import { db } from "zstream/server/db";
+import { ErrorCode } from "./error-codes";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -47,6 +49,26 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   providers: [
+    // CredentialsProvider({
+    //   name: "Credentials",
+    //   credentials: {
+    //     email: { label: "email", type: "email" },
+    //     password: { label: "password", type: "password" },
+    //   },
+    //   authorize: async (credentials, _req) => {
+    //     if (!credentials) {
+    //       throw new Error(ErrorCode.CREDENTIALS_NOT_FOUND);
+    //     }
+
+    //     // TODO: Check if user exists
+
+    //     // TODO: Check if password matches
+
+    //     return {
+    //       id: "",
+    //     } satisfies User;
+    //   },
+    // }),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -59,6 +81,13 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
     }),
   ],
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+    error: "/auth/error",
+    verifyRequest: "/auth/verify-request",
+    newUser: "/auth/new-user",
+  },
 };
 
 /**

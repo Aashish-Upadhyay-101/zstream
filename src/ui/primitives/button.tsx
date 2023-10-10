@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { TbLoader3 } from "react-icons/tb";
 
 import { cn } from "../lib/utils";
 
@@ -24,7 +25,6 @@ const buttonVariants = cva(
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
       },
     },
     defaultVariants: {
@@ -38,17 +38,51 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  loading?: boolean;
 }
 
+const loaderVariants = cva("mr-2 animate-spin", {
+  variants: {
+    size: {
+      default: "h-5 w-5",
+      sm: "h-4 w-4",
+      lg: "h-5 w-5",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+  },
+});
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+  ({ className, variant, size, asChild = false, loading, ...props }, ref) => {
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          {...props}
+        />
+      );
+    }
+
+    const showLoader = loading === true;
+    const disabled = props.disabled || showLoader;
+
     return (
-      <Comp
+      <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+        disabled={disabled}
+      >
+        {showLoader && (
+          <TbLoader3
+            className={cn("mr-2 animate-spin", loaderVariants({ size }))}
+          />
+        )}
+        {props.children}
+      </button>
     );
   },
 );
