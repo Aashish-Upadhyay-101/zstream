@@ -6,13 +6,13 @@ import { Label } from "zstream/ui/primitives/label";
 import { Input } from "zstream/ui/primitives/input";
 import { Button } from "zstream/ui/primitives/button";
 import { toast } from "sonner";
-import Link from "next/link";
 
 interface SignUpFromProps {
   className: string;
 }
 
 const ZSignUpFormSchema = z.object({
+  name: z.string().min(4),
   email: z.string().email().min(1),
   password: z.string().min(6).max(20),
 });
@@ -26,6 +26,7 @@ export default function SignInForm({ className }: SignUpFromProps) {
     formState: { errors, isSubmitting },
   } = useForm<TSignUpFormSchema>({
     values: {
+      name: "",
       email: "",
       password: "",
     },
@@ -33,6 +34,7 @@ export default function SignInForm({ className }: SignUpFromProps) {
   });
 
   const onFormSubmit: SubmitHandler<TSignUpFormSchema> = async ({
+    name,
     email,
     password,
   }) => {
@@ -44,6 +46,24 @@ export default function SignInForm({ className }: SignUpFromProps) {
       className={cn("flex w-full flex-col gap-y-4", className)}
       onSubmit={handleSubmit(onFormSubmit)}
     >
+      <div>
+        <Label htmlFor="name" className="text-muted-foreground">
+          Name
+        </Label>
+        <Input
+          id="name"
+          type="text"
+          className="mt-2 bg-background"
+          {...register("name", { required: true })}
+        />
+
+        {errors.name && (
+          <span className="mt-1 text-xs text-red-500">
+            {errors.name.message}
+          </span>
+        )}
+      </div>
+
       <div>
         <Label htmlFor="email" className="text-muted-foreground">
           Email
@@ -78,15 +98,6 @@ export default function SignInForm({ className }: SignUpFromProps) {
             {errors.password.message}
           </span>
         )}
-
-        <p className="mt-2 text-sm text-muted-foreground">
-          <Link
-            href="/auth/forgot-password"
-            className="text-primary duration-200 hover:opacity-70"
-          >
-            Forgot password?
-          </Link>
-        </p>
       </div>
 
       <Button loading={isSubmitting} disabled={isSubmitting} size="lg">
