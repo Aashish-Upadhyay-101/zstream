@@ -8,31 +8,31 @@ import { Button } from "zstream/ui/primitives/button";
 import { toast } from "sonner";
 import Link from "next/link";
 
-interface SignUpFromProps {
+interface SignInFromProps {
   className: string;
 }
 
-const ZSignUpFormSchema = z.object({
+const ZSignInFormSchema = z.object({
   email: z.string().email().min(1),
   password: z.string().min(6).max(20),
 });
 
-type TSignUpFormSchema = z.infer<typeof ZSignUpFormSchema>;
+type TSignInFormSchema = z.infer<typeof ZSignInFormSchema>;
 
-export default function SignInForm({ className }: SignUpFromProps) {
+export default function SignInForm({ className }: SignInFromProps) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<TSignUpFormSchema>({
+  } = useForm<TSignInFormSchema>({
     values: {
       email: "",
       password: "",
     },
-    resolver: zodResolver(ZSignUpFormSchema),
+    resolver: zodResolver(ZSignInFormSchema),
   });
 
-  const onFormSubmit: SubmitHandler<TSignUpFormSchema> = async ({
+  const onFormSubmit: SubmitHandler<TSignInFormSchema> = async ({
     email,
     password,
   }) => {
