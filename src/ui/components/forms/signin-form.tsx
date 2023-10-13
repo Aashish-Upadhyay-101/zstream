@@ -36,7 +36,7 @@ export default function SignInForm({ className }: SignInFromProps) {
     email,
     password,
   }) => {
-    // TODO(signup): handle user creation
+    // TODO(signin): handle user creation
   };
 
   return (
