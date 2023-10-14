@@ -48,7 +48,7 @@ export default function Navbar({ children }: NavbarProps) {
   };
 
   return (
-    <nav className="fixed z-50 w-full border border-gray-200 bg-white shadow-sm lg:overflow-y-visible">
+    <nav className="z-50 w-full border border-gray-200 bg-white shadow-sm lg:overflow-y-visible">
       <div className="mx-auto flex max-w-full items-center lg:px-16 xl:grid xl:grid-cols-12">
         <div className="flex flex-shrink-0 items-center gap-2 lg:static xl:col-span-2">
           <RiZzzFill className="h-8 w-8" />
