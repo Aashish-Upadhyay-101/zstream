@@ -1,14 +1,17 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { compare } from "bcrypt";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
   User,
+  Session,
 } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import EmailProvider from "next-auth/providers/email";
+import Credentials from "next-auth/providers/credentials";
 import { db } from "zstream/server/db";
+import { ErrorCode } from "zstream/services/auth/ErrorCode";
+import { getUserByEmail } from "zstream/services/server/getUserByEmail";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -37,55 +40,102 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+  session: {
+    strategy: "jwt",
   },
-  adapter: PrismaAdapter(db),
+  secret: process.env.NEXTAUTH_SECRET || "secret",
   providers: [
-    // CredentialsProvider({
-    //   name: "Credentials",
-    //   credentials: {
-    //     email: { label: "email", type: "email" },
-    //     password: { label: "password", type: "password" },
-    //   },
-    //   authorize: async (credentials, _req) => {
-    //     if (!credentials) {
-    //       throw new Error(ErrorCode.CREDENTIALS_NOT_FOUND);
-    //     }
-
-    //     // TODO: Check if user exists
-
-    //     // TODO: Check if password matches
-
-    //     return {
-    //       id: "",
-    //     } satisfies User;
-    //   },
-    // }),
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
+    Credentials({
+      name: "credentials",
+      credentials: {
+        email: { label: "email", type: "email" },
+        password: { label: "password", type: "password" },
       },
-      from: process.env.EMAIL_FROM,
+      authorize: async (credentials, _req) => {
+        if (!credentials) {
+          throw new Error(ErrorCode.CREDENTIALS_NOT_FOUND);
+        }
+
+        const { email, password } = credentials;
+
+        const user = await getUserByEmail(email).catch(() => {
+          throw new Error(ErrorCode.INCORRECT_EMAIL_PASSWORD);
+        });
+
+        const isPasswordCorrect = await compare(password, user.password);
+        if (!isPasswordCorrect) {
+          throw new Error(ErrorCode.INCORRECT_EMAIL_PASSWORD);
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        } satisfies User;
+      },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      if (!token.email) {
+        throw new Error("No email in token");
+      }
+
+      const retrievedUser = await db.user.findUnique({
+        where: {
+          email: token.email,
+        },
+      });
+
+      if (!retrievedUser) {
+        return {
+          ...token,
+          id: user.id,
+        };
+      }
+
+      return {
+        id: retrievedUser.id,
+        name: retrievedUser.name,
+        email: retrievedUser.email,
+      };
+    },
+    session: ({ session, token }) => {
+      if (token && token.email) {
+        return {
+          ...session,
+          user: {
+            id: token.id as string,
+            name: token.name,
+            email: token.email,
+          },
+        } satisfies Session;
+      }
+
+      return session;
+    },
+  },
+  adapter: PrismaAdapter(db),
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
     error: "/auth/error",
-    verifyRequest: "/auth/verify-request",
-    newUser: "/auth/new-user",
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    maxAge: 60 * 24 * 30 * 30, // 30 days
+  },
+  cookies: {
+    callbackUrl: {
+      name: `__Secure-next-auth.callback-url`,
+      options: {
+        sameSite: "lax",
+        path: "/",
+        secure: true,
+        httpOnly: false,
+      },
+    },
   },
 };
 

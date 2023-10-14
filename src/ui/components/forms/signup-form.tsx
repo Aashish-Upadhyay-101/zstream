@@ -6,6 +6,9 @@ import { Label } from "zstream/ui/primitives/label";
 import { Input } from "zstream/ui/primitives/input";
 import { Button } from "zstream/ui/primitives/button";
 import { toast } from "sonner";
+import { api } from "zstream/utils/api";
+import { TRPCClientError } from "@trpc/client";
+import { signIn } from "next-auth/react";
 
 interface SignUpFromProps {
   className: string;
@@ -33,12 +36,29 @@ export default function SignInForm({ className }: SignUpFromProps) {
     resolver: zodResolver(ZSignUpFormSchema),
   });
 
+  const { mutateAsync: signup } = api.auth.signup.useMutation();
+
   const onFormSubmit: SubmitHandler<TSignUpFormSchema> = async ({
     name,
     email,
     password,
   }) => {
-    // TODO(signup): handle user creation
+    try {
+      await signup({ name, email, password });
+
+      await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/",
+      });
+    } catch (error) {
+      if (
+        error instanceof TRPCClientError &&
+        error.data?.code === "BAD_REQUEST"
+      ) {
+        toast.error(error.message);
+      }
+    }
   };
 
   return (

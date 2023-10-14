@@ -7,6 +7,8 @@ import { Input } from "zstream/ui/primitives/input";
 import { Button } from "zstream/ui/primitives/button";
 import { toast } from "sonner";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { TRPCClientError } from "@trpc/client";
 
 interface SignInFromProps {
   className: string;
@@ -36,7 +38,17 @@ export default function SignInForm({ className }: SignInFromProps) {
     email,
     password,
   }) => {
-    // TODO(signin): handle user creation
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/",
+      });
+    } catch (error) {
+      if (error instanceof TRPCClientError) {
+        toast.error(error.message);
+      }
+    }
   };
 
   return (
@@ -90,7 +102,7 @@ export default function SignInForm({ className }: SignInFromProps) {
       </div>
 
       <Button loading={isSubmitting} disabled={isSubmitting} size="lg">
-        {isSubmitting ? "Signing up..." : "Sign Up"}
+        {isSubmitting ? "Signing in..." : "Sign In"}
       </Button>
     </form>
   );
