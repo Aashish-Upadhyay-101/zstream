@@ -4,6 +4,7 @@ import { api } from "zstream/utils/api";
 import { useRouter } from "next/router";
 import { TbLoader3 } from "react-icons/tb";
 import AppLayout from "zstream/layouts/AppLayout";
+import VideoRecommendationBar from "zstream/ui/components/video/video-recommendation";
 
 export default function Watch() {
   const router = useRouter();
@@ -23,7 +24,8 @@ export default function Watch() {
 
   return (
     <AppLayout>
-      <VideoPlayer videoUrl={video?.videoUrl!} height={500} width={900} />
+      <VideoPlayer videoUrl={video?.videoUrl!} height={500} width={1200} />
+      <VideoRecommendationBar />
     </AppLayout>
   );
 }
