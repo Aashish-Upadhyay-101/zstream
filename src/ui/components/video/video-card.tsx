@@ -1,10 +1,12 @@
 import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
 interface VideoCardProps {
+  id: string;
   creator: string;
   title: string;
   thumbnailUrl?: string;
@@ -16,6 +18,7 @@ interface VideoCardProps {
 }
 
 export default function VideoCard({
+  id,
   creator,
   title,
   thumbnailUrl,
@@ -24,7 +27,10 @@ export default function VideoCard({
   createdAt,
 }: VideoCardProps) {
   return (
-    <div className="cursor-pointer overflow-hidden rounded-md border">
+    <Link
+      href={`/watch?id=${id}`}
+      className="cursor-pointer overflow-hidden rounded-md border"
+    >
       <Image
         className="max-h-40"
         src={thumbnailUrl!}
@@ -44,6 +50,6 @@ export default function VideoCard({
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

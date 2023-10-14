@@ -1,12 +1,6 @@
-import { IoSettingsOutline } from "react-icons/io5";
-import {
-  BiHelpCircle,
-  BiHomeAlt2,
-  BiVideo,
-  BiHistory,
-  BiLike,
-} from "react-icons/bi";
+import { BiHomeAlt2, BiVideo, BiHistory, BiLike } from "react-icons/bi";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 interface NavigationItem {
   name: string;
@@ -17,6 +11,8 @@ interface NavigationItem {
 
 export default function Sidebar() {
   const router = useRouter();
+
+  const [collapse, setCollapse] = useState<boolean>(false);
 
   const SidebarNavigationItems: NavigationItem[] = [
     {
@@ -45,8 +41,18 @@ export default function Sidebar() {
     },
   ];
 
+  useEffect(() => {
+    if (router.isReady && router.query.id) {
+      setCollapse(true);
+    }
+  }, []);
+
   return (
-    <div className="h-screen shrink-0 border-r lg:w-60">
+    <div
+      className={`h-screen shrink-0 border-r  ${
+        collapse ? "lg:w-18" : "lg:w-60"
+      }`}
+    >
       <div className="h-full px-4 py-8">
         <div className="flex h-[90%] flex-col justify-between">
           <ul className="space-y-3">
@@ -58,7 +64,7 @@ export default function Sidebar() {
                   item.current && "bg-primary/20"
                 } duration-150 hover:cursor-pointer hover:bg-primary/20`}
               >
-                {item.icon("h-5 w-5")} {item.name}
+                {item.icon("h-5 w-5")} {!collapse && item.name}
               </li>
             ))}
           </ul>
