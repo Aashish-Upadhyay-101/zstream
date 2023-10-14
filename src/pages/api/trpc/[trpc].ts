@@ -1,7 +1,7 @@
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-import { appRouter } from "zstream/server/api/root";
-import { createTRPCContext } from "zstream/server/api/trpc";
+import { appRouter } from "zstream/server/router";
+import { createTRPCContext } from "zstream/server/trpc";
 
 // export API handler
 export default createNextApiHandler({
