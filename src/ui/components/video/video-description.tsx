@@ -32,7 +32,9 @@ export default function VideoDescription({
           <button>
             <AiOutlineDislike className="h-7 w-7" />
           </button>
-          <button>Save</button>
+          <button className="flex items-center gap-2 rounded-lg border border-primary/70 p-2 duration-200 hover:bg-primary/20">
+            <BiSave className="h-7 w-7 text-primary" /> Save
+          </button>
         </div>
       </div>
       <div className={`mt-4 ${!showMore && "line-clamp-2"}`}>{description}</div>

@@ -21,7 +21,7 @@ export default function Watch() {
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
-        <TbLoader3 className="animate-spin text-3xl" />;
+        <TbLoader3 className="animate-spin text-3xl" />
       </div>
     );
   }
