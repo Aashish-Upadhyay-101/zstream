@@ -5,14 +5,18 @@ import { useRouter } from "next/router";
 import { TbLoader3 } from "react-icons/tb";
 import AppLayout from "zstream/layouts/AppLayout";
 import VideoRecommendationBar from "zstream/ui/components/video/video-recommendation";
+import VideoDescription from "zstream/ui/components/video/video-description";
 
 export default function Watch() {
   const router = useRouter();
   const { id } = router.query as { id: string };
-  console.log("id:", id);
 
   const { data: video, isLoading } = api.video.getVideoById.useQuery({ id });
   console.log("video detail: ", video);
+
+  // get views
+
+  // get comments
 
   if (isLoading) {
     return (
@@ -24,7 +28,15 @@ export default function Watch() {
 
   return (
     <AppLayout>
-      <VideoPlayer videoUrl={video?.videoUrl!} height={500} width={1200} />
+      <div className="w-[70%]">
+        <VideoPlayer videoUrl={video?.videoUrl!} />
+        <VideoDescription
+          key={video?.id}
+          creator={video?.user.name!}
+          title={video?.title!}
+          description={video?.description!}
+        />
+      </div>
       <VideoRecommendationBar />
     </AppLayout>
   );

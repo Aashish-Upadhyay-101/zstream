@@ -6,14 +6,14 @@ export default function VideoRecommendationBar() {
   const { data: videos, isLoading } = api.video.getAllVideos.useQuery();
 
   return (
-    <div className="ml-8">
+    <div className="ml-auto max-w-md flex-shrink">
       {isLoading && (
         <div className="ml-8 flex h-screen flex-grow items-center justify-center">
           <TbLoader3 className="animate-spin text-5xl" />
         </div>
       )}
 
-      <div className="flex max-w-xl flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         {videos?.map((video) => (
           <RecommendationVideoCard
             key={video.id}

@@ -28,7 +28,7 @@ export default function RecommendationVideoCard({
   return (
     <Link
       href={`/watch?id=${id}`}
-      className="flex max-w-[40] cursor-pointer gap-2 overflow-hidden rounded-md border"
+      className="flex cursor-pointer gap-2 overflow-hidden rounded-md border"
     >
       <Image src={thumbnailUrl!} alt="thumbnail" width={200} height={200} />
       <div className="p-3">

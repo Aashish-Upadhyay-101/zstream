@@ -7,7 +7,11 @@ export const getVideoById = async (id: string) => {
     },
     include: {
       user: true,
-      comment: true,
+      comment: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 

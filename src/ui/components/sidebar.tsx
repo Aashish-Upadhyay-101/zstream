@@ -49,9 +49,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`h-screen shrink-0 border-r  ${
-        collapse ? "lg:w-18" : "lg:w-60"
-      }`}
+      className={`h-screen border-r ${collapse ? "lg:w-[72px]" : "lg:w-60"}`}
     >
       <div className="h-full px-4 py-8">
         <div className="flex h-[90%] flex-col justify-between">
@@ -64,7 +62,7 @@ export default function Sidebar() {
                   item.current && "bg-primary/20"
                 } duration-150 hover:cursor-pointer hover:bg-primary/20`}
               >
-                {item.icon("h-5 w-5")} {!collapse && item.name}
+                {item.icon("h-5 w-5 shrink-0")} {!collapse && item.name}
               </li>
             ))}
           </ul>
