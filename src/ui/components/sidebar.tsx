@@ -50,8 +50,9 @@ export default function Sidebar() {
       <div className="h-full px-4 py-8">
         <div className="flex h-[90%] flex-col justify-between">
           <ul className="space-y-3">
-            {SidebarNavigationItems.map((item: NavigationItem) => (
+            {SidebarNavigationItems.map((item: NavigationItem, index) => (
               <li
+                key={index}
                 onClick={() => router.push(item.path)}
                 className={`flex items-center gap-2 rounded-md p-2 ${
                   item.current && "bg-primary/20"

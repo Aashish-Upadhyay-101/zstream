@@ -24,7 +24,7 @@ export default function VideoCard({
   createdAt,
 }: VideoCardProps) {
   return (
-    <div className="overflow-hidden rounded-md border">
+    <div className="cursor-pointer overflow-hidden rounded-md border">
       <Image
         className="max-h-40"
         src={thumbnailUrl!}

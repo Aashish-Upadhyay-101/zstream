@@ -6,7 +6,7 @@ import { BsPerson } from "react-icons/bs";
 import { SiObsstudio } from "react-icons/si";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineFeedback } from "react-icons/md";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import {
   Avatar,
@@ -19,7 +19,6 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
   MenubarTrigger,
 } from "zstream/ui/primitives/menu";
 
@@ -116,7 +115,10 @@ export default function Navbar({ children }: NavbarProps) {
                     <MdOutlineFeedback className="h-5 w-5" /> Feedback
                   </MenubarItem>
                   <MenubarSeparator />
-                  <MenubarItem className="flex items-center gap-2">
+                  <MenubarItem
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="flex items-center gap-2"
+                  >
                     <BiLogOut className="h-5 w-5" /> Logout
                   </MenubarItem>
                 </MenubarContent>

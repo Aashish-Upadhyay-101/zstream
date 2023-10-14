@@ -5,6 +5,14 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
+  async rewrites() {
+    return [
+      {
+        source: "/watch",
+        destination: "/",
+      },
+    ];
+  },
   reactStrictMode: true,
   images: {
     domains: ["res.cloudinary.com"],
