@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "zstream/server/trpc";
 import { authRouter } from "./authRouter";
+import { videoRouter } from "./videoRouter";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { authRouter } from "./authRouter";
  */
 export const appRouter = createTRPCRouter({
   auth: authRouter,
+  video: videoRouter,
 });
 
 // export type definition of API

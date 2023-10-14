@@ -46,7 +46,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="fixed h-screen border-r lg:w-60">
+    <div className="h-screen shrink-0 border-r lg:w-60">
       <div className="h-full px-4 py-8">
         <div className="flex h-[90%] flex-col justify-between">
           <ul className="space-y-3">
