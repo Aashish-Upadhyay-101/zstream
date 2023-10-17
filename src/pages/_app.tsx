@@ -5,6 +5,7 @@ import { type AppType } from "next/app";
 import { api } from "zstream/utils/api";
 import { Toaster } from "zstream/ui/components";
 import "zstream/styles/globals.css";
+import { TRPCProvider } from "zstream/server/trpcReact";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,7 +14,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Toaster position="top-right" richColors />
-      <Component {...pageProps} />
+      <TRPCProvider>
+        <Component {...pageProps} />
+      </TRPCProvider>
     </SessionProvider>
   );
 };

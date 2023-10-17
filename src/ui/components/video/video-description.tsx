@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "zstream/ui/primitives/button";
 import { BiSave } from "react-icons/bi";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 import { useRouter } from "next/router";
-import { api } from "zstream/utils/api";
+import { api } from "zstream/server/trpcReact";
 import { useSession } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface VideoDescriptionProps {
   title: string;
@@ -21,7 +22,7 @@ export default function VideoDescription({
   views,
 }: VideoDescriptionProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
-
+  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const userId = session?.user.id!;
 
@@ -34,8 +35,10 @@ export default function VideoDescription({
   const { data: dislikes } = api.video.getVideoDislikesCount.useQuery({
     videoId,
   });
+
   const { mutateAsync: createEngagement } =
     api.video.createVideoEngagement.useMutation();
+
   const handleCreateEngagement = async (engagementType: "LIKE" | "DISLIKE") => {
     try {
       await createEngagement({
@@ -43,8 +46,6 @@ export default function VideoDescription({
         userId,
         videoId,
       });
-
-      // update likes and dislikes
     } catch (error) {
       if (
         error instanceof TRPCClientError &&

@@ -1,7 +1,7 @@
 import AppLayout from "zstream/layouts/AppLayout";
 import { Navbar, Sidebar } from "zstream/ui/components";
 import VideoCard from "zstream/ui/components/video/video-card";
-import { api } from "zstream/utils/api";
+import { api } from "zstream/server/trpcReact";
 import { TbLoader3 } from "react-icons/tb";
 
 export default function Home() {

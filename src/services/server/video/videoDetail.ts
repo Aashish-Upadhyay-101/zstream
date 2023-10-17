@@ -110,7 +110,7 @@ export const videoEngagementAction = async ({
 
     if (disliked) {
       // remove like
-      await db.videoEngagement.deleteMany({
+      await db.videoEngagement.delete({
         where: {
           id: disliked.id,
         },
@@ -128,7 +128,7 @@ export const videoEngagementAction = async ({
 
     if (engagement) {
       // remove like
-      await db.videoEngagement.deleteMany({
+      await db.videoEngagement.delete({
         where: {
           id: engagement.id,
         },
@@ -160,7 +160,7 @@ export const videoEngagementAction = async ({
 
     if (liked) {
       // remove like
-      await db.videoEngagement.deleteMany({
+      await db.videoEngagement.delete({
         where: {
           id: liked.id,
         },
@@ -178,7 +178,7 @@ export const videoEngagementAction = async ({
 
     if (engagement) {
       // remove like
-      await db.videoEngagement.deleteMany({
+      await db.videoEngagement.delete({
         where: {
           id: engagement.id,
         },

@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import VideoPlayer from "zstream/ui/components/video/video-player";
-import { api } from "zstream/utils/api";
+import { api } from "zstream/server/trpcReact";
 import { useRouter } from "next/router";
 import { TbLoader3 } from "react-icons/tb";
 import AppLayout from "zstream/layouts/AppLayout";

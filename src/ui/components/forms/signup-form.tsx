@@ -6,7 +6,7 @@ import { Label } from "zstream/ui/primitives/label";
 import { Input } from "zstream/ui/primitives/input";
 import { Button } from "zstream/ui/primitives/button";
 import { toast } from "sonner";
-import { api } from "zstream/utils/api";
+import { api } from "zstream/server/trpcReact";
 import { TRPCClientError } from "@trpc/client";
 import { signIn } from "next-auth/react";
 

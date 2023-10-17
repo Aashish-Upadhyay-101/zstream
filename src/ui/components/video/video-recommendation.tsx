@@ -1,5 +1,5 @@
 import { TbLoader3 } from "react-icons/tb";
-import { api } from "zstream/utils/api";
+import { api } from "zstream/server/trpcReact";
 import RecommendationVideoCard from "./recommendation-video-card";
 
 export default function VideoRecommendationBar() {
