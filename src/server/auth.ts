@@ -11,7 +11,7 @@ import {
 import Credentials from "next-auth/providers/credentials";
 import { db } from "zstream/server/db";
 import { ErrorCode } from "zstream/services/auth/ErrorCode";
-import { getUserByEmail } from "zstream/services/server/getUserByEmail";
+import { getUserByEmail } from "zstream/services/server/user/getUserByEmail";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

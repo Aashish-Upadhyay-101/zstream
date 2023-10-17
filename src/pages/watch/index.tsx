@@ -12,9 +12,6 @@ export default function Watch() {
   const { id } = router.query as { id: string };
 
   const { data: video, isLoading } = api.video.getVideoById.useQuery({ id });
-  console.log("video detail: ", video);
-
-  // get views
 
   // get comments
 
@@ -35,6 +32,7 @@ export default function Watch() {
           creator={video?.user.name!}
           title={video?.title!}
           description={video?.description!}
+          views={video?._count.videoEngagement!}
         />
       </div>
       <VideoRecommendationBar />

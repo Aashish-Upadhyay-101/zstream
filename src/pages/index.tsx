@@ -6,11 +6,10 @@ import { TbLoader3 } from "react-icons/tb";
 
 export default function Home() {
   const { data: videos, isLoading } = api.video.getAllVideos.useQuery();
-
   if (isLoading)
     return (
       <div className="flex h-screen w-screen items-center justify-center">
-        <TbLoader3 className="animate-spin text-3xl" />;
+        <TbLoader3 className="animate-spin text-3xl" />
       </div>
     );
   return (

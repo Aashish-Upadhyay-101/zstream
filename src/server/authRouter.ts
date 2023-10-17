@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createUser } from "zstream/services/server/createUser";
+import { createUser } from "zstream/services/server/user/createUser";
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { TRPCError } from "@trpc/server";
 

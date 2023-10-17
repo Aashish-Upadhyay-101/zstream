@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
+import { useRouter } from "next/router";
 
 interface SignInFromProps {
   className: string;
@@ -34,15 +35,24 @@ export default function SignInForm({ className }: SignInFromProps) {
     resolver: zodResolver(ZSignInFormSchema),
   });
 
+  const router = useRouter();
+
   const onFormSubmit: SubmitHandler<TSignInFormSchema> = async ({
     email,
     password,
   }) => {
     try {
+      let callBackUrl = "/";
+      const { next } = router.query as { next: string };
+
+      if (next) {
+        callBackUrl = next;
+      }
+
       await signIn("credentials", {
         email,
         password,
-        callbackUrl: "/",
+        callbackUrl: callBackUrl,
       });
     } catch (error) {
       if (error instanceof TRPCClientError) {
