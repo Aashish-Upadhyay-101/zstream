@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { Button } from "zstream/ui/primitives/button";
-import { BiSave } from "react-icons/bi";
-import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import {
+  AiOutlineLike,
+  AiFillLike,
+  AiOutlineDislike,
+  AiFillDislike,
+} from "react-icons/ai";
 import { useRouter } from "next/router";
 import { api } from "zstream/server/trpcReact";
 import { useSession } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface VideoDescriptionProps {
   title: string;
   creator: string;
   description: string;
   views: number;
+  engagementStatus: {
+    liked: boolean;
+    disliked: boolean;
+  };
 }
 
 export default function VideoDescription({
@@ -20,9 +27,9 @@ export default function VideoDescription({
   creator,
   description,
   views,
+  engagementStatus,
 }: VideoDescriptionProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
-  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const userId = session?.user.id!;
 
@@ -38,6 +45,16 @@ export default function VideoDescription({
 
   const { mutateAsync: createEngagement } =
     api.video.createVideoEngagement.useMutation();
+
+  const [videoLikes, setVideoLikes] = useState(0);
+  const [videoDislikes, setVideoDislikes] = useState(0);
+
+  useEffect(() => {
+    if (likes !== undefined && dislikes !== undefined) {
+      setVideoLikes(likes);
+      setVideoDislikes(dislikes);
+    }
+  }, [likes, dislikes]);
 
   const handleCreateEngagement = async (engagementType: "LIKE" | "DISLIKE") => {
     try {
@@ -72,8 +89,12 @@ export default function VideoDescription({
               handleCreateEngagement("LIKE");
             }}
           >
-            <AiOutlineLike className="h-7 w-7" />
-            <span className="text-xs font-semibold">{likes}</span>
+            {engagementStatus.liked === true ? (
+              <AiFillLike className="h-7 w-6 fill-primary" />
+            ) : (
+              <AiOutlineLike className="h-7 w-7" />
+            )}
+            <span className="text-xs font-semibold">{videoLikes}</span>
           </button>
           <button
             className="flex flex-col items-center"
@@ -81,14 +102,12 @@ export default function VideoDescription({
               handleCreateEngagement("DISLIKE");
             }}
           >
-            <AiOutlineDislike className="h-7 w-7" />
-            <span className="text-xs font-semibold">{dislikes}</span>
-          </button>
-          <button
-            className="flex items-center gap-2 rounded-lg border border-primary/70 p-2 duration-200 hover:bg-primary/20"
-            onClick={() => {}}
-          >
-            <BiSave className="h-7 w-7 text-primary" /> Save
+            {engagementStatus.disliked === true ? (
+              <AiFillDislike className="h-7 w-7 fill-primary" />
+            ) : (
+              <AiOutlineDislike className="h-7 w-7" />
+            )}
+            <span className="text-xs font-semibold">{videoDislikes}</span>
           </button>
         </div>
       </div>

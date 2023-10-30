@@ -9,7 +9,6 @@ export const api = createTRPCReact<AppRouter>({
   unstable_overrides: {
     useMutation: {
       async onSuccess(opts) {
-        await opts.queryClient.cancelQueries();
         await opts.queryClient.refetchQueries();
         await opts.queryClient.invalidateQueries();
       },

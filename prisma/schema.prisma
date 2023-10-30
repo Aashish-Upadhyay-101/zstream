@@ -42,41 +42,37 @@ model VerificationToken {
 }
 
 model User {
-    id                     String                   @id @default(cuid())
-    name                   String
-    email                  String                   @unique
-    emailVerified          DateTime?
-    password               String
-    image                  String?
-    backgroundImage        String?
-    handle                 String?
-    description            String?                  @db.Text
-    accounts               Account[]
-    announcement           Announcement[]
-    announcementEngagement AnnouncementEngagement[]
-    comment                Comment[]
-    follower               FollowEngagement[]       @relation("follower")
-    following              FollowEngagement[]       @relation("following")
-    Playlist               Playlist[]
-    sessions               Session[]
-    videos                 Video[]
-    videoEngagements       VideoEngagement[]
+    id               String             @id @default(cuid())
+    name             String
+    email            String             @unique
+    emailVerified    DateTime?
+    password         String
+    image            String?
+    backgroundImage  String?
+    handle           String?
+    description      String?            @db.Text
+    accounts         Account[]
+    comment          Comment[]
+    follower         FollowEngagement[] @relation("follower")
+    following        FollowEngagement[] @relation("following")
+    sessions         Session[]
+    videos           Video[]
+    videoEngagements VideoEngagement[]
 }
 
 model Video {
-    id               String             @id @default(cuid())
-    title            String
-    thumbnailUrl     String?
-    description      String?
-    videoUrl         String
-    published        Boolean            @default(true)
-    userId           String
-    createdAt        DateTime           @default(now())
-    updatedAt        DateTime           @updatedAt
-    comment          Comment[]
-    playlistHasVideo PlaylistHasVideo[]
-    user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-    videoEngagement  VideoEngagement[]
+    id              String            @id @default(cuid())
+    title           String
+    thumbnailUrl    String?
+    description     String?
+    videoUrl        String
+    published       Boolean           @default(true)
+    userId          String
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+    comment         Comment[]
+    user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    videoEngagement VideoEngagement[]
 
     @@index([userId])
 }
@@ -107,32 +103,6 @@ model Comment {
     @@index([videoId])
 }
 
-model Announcement {
-    id                     String                   @id @default(cuid())
-    message                String
-    userId                 String
-    createdAt              DateTime                 @default(now())
-    updatedAt              DateTime                 @updatedAt
-    user                   User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    AnnouncementEngagement AnnouncementEngagement[]
-
-    @@index([userId])
-}
-
-model AnnouncementEngagement {
-    userId         String
-    announcementId String
-    engagementType EngagementType
-    createdAt      DateTime       @default(now())
-    updatedAt      DateTime       @updatedAt
-    announcement   Announcement   @relation(fields: [announcementId], references: [id], onDelete: Cascade)
-    user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@id([userId, announcementId])
-    @@index([userId])
-    @@index([announcementId])
-}
-
 model FollowEngagement {
     followerId     String
     followingId    String
@@ -145,31 +115,6 @@ model FollowEngagement {
     @@id([followerId, followingId])
     @@index([followerId])
     @@index([followingId])
-}
-
-model Playlist {
-    id               String             @id @default(uuid())
-    title            String
-    description      String
-    userId           String
-    createdAt        DateTime           @default(now())
-    updatedAt        DateTime           @updatedAt
-    user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-    playlistHasVideo PlaylistHasVideo[]
-
-    @@index([userId])
-}
-
-model PlaylistHasVideo {
-    id         String   @id @default(uuid())
-    playlistId String
-    videoId    String
-    playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
-    video      Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
-
-    @@index([playlistId, videoId])
-    @@index([playlistId])
-    @@index([videoId])
 }
 
 enum EngagementType {

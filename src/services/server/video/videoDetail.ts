@@ -16,6 +16,15 @@ export const getVideoById = async (id: string) => {
           },
         },
       },
+      videoEngagement: {
+        include: {
+          user: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
     },
   });
 
